@@ -21,7 +21,7 @@ Ridho Akbar Fadhilah
 
 ---
 
-## 🔍 Analisis Lanjutan (Opsional)
+## 🔍 Analisis Lanjutan
 
 Untuk memperdalam pemahaman terhadap pola penggunaan sepeda, dilakukan analisis tambahan berupa:
 
@@ -132,4 +132,3 @@ Jika dashboard di-deploy menggunakan Streamlit Cloud, link dapat ditambahkan pad
 © 2026 Ridho Akbar Fadhilah
 
 ---
-```
