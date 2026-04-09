@@ -10,7 +10,7 @@ Dashboard ini dirancang agar dapat membantu pengguna memahami perilaku penyewaan
 
 ## 👤 Informasi Pembuat
 
-- **Nama:** Ridho Akbar Fadhilah  
+Ridho Akbar Fadhilah  
 
 ---
 
@@ -74,8 +74,9 @@ submission
 ├── requirements.txt
 └── url.txt (opsional)
 
----
 ```
+---
+
 
 ## ⚙️ Cara Menjalankan Dashboard
 
@@ -130,7 +131,5 @@ Jika dashboard di-deploy menggunakan Streamlit Cloud, link dapat ditambahkan pad
 
 © 2026 Ridho Akbar Fadhilah
 
-```
-
 ---
-
+```
