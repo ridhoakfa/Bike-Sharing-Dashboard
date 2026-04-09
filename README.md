@@ -72,7 +72,7 @@ submission
 ├── notebook.ipynb         # Proses analisis data
 ├── README.md
 ├── requirements.txt
-└── url.txt (opsional)
+└── url.txt
 
 ```
 ---
@@ -106,6 +106,7 @@ streamlit run dashboard.py
 * matplotlib
 * seaborn
 * kagglehub
+* os
 * streamlit
 
 ---
@@ -121,9 +122,9 @@ streamlit run dashboard.py
 
 ---
 
-## 🌐 Deployment (Opsional)
+## 🌐 Deployment 
 
-Jika dashboard di-deploy menggunakan Streamlit Cloud, link dapat ditambahkan pada file `url.txt`.
+[ `url.txt`.](https://bike-sharing-dashboard-ridho-akfa.streamlit.app/)
 
 ---
 
