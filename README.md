@@ -124,7 +124,7 @@ streamlit run dashboard.py
 
 ## 🌐 Deployment 
 
-[ `url.txt`.](https://bike-sharing-dashboard-ridho-akfa.streamlit.app/)
+[ `Bike Sharing Dashboard`](https://bike-sharing-dashboard-ridho-akfa.streamlit.app/)
 
 ---
 
