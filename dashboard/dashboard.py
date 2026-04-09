@@ -22,8 +22,12 @@ workingday = st.sidebar.selectbox(
 
 
 # LOAD DATA
-hour_df = pd.read_csv("main_data.csv")
-day_df = pd.read_csv("day.csv")  
+import os
+
+BASE_DIR = os.path.dirname(__file__)
+
+hour_df = pd.read_csv(os.path.join(BASE_DIR, "main_data.csv"))
+day_df = pd.read_csv(os.path.join(BASE_DIR, "day.csv"))
 
 # Pilih dataset
 if analysis_level == "Hourly":
