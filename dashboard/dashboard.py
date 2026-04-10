@@ -61,12 +61,29 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
+st.sidebar.markdown("### Filter Tambahan")
+
+# Range tanggal
+if "dteday" in df.columns:
+    df["dteday"] = pd.to_datetime(df["dteday"])
+    date_range = st.sidebar.date_input(
+        "Pilih Rentang Tanggal",
+        [df["dteday"].min(), df["dteday"].max()]
+    )
+
+    if len(date_range) == 2:
+        filtered_df = filtered_df[
+            (filtered_df["dteday"] >= pd.to_datetime(date_range[0])) &
+            (filtered_df["dteday"] <= pd.to_datetime(date_range[1]))
+        ]
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
 st.markdown("""
-Dashboard ini menyajikan analisis penggunaan sepeda berdasarkan **faktor lingkungan (cuaca)** 
-dan **pola waktu penggunaan** untuk membantu memahami perilaku pengguna.
+Dashboard ini menyajikan analisis lengkap untuk menjawab:
+1. Pengaruh faktor lingkungan terhadap penyewaan
+2. Dampak kondisi cuaca
+3. Pola perilaku pengguna berdasarkan waktu
 """)
 
 st.info("""
@@ -74,79 +91,110 @@ st.info("""
 **Dataset:** Bike Sharing Dataset
 """)
 
-# Tabs Layout
 
-tab1, tab2, tab3 = st.tabs([
-    "Overview",
-    "Analisis Cuaca",
-    "Pola Waktu"
-])
+# OVERVIEW
+st.markdown("## 📊 Overview")
 
-# TAB 1 - OVERVIEW
-with tab1:
+col1, col2, col3 = st.columns(3)
 
-    col1, col2, col3 = st.columns(3)
+col1.metric("Total Penyewaan", f"{int(filtered_df['cnt'].sum()):,}")
+col2.metric("Total Casual", f"{int(filtered_df['casual'].sum()):,}")
+col3.metric("Total Registered", f"{int(filtered_df['registered'].sum()):,}")
+
+st.markdown("---")
     
-    col1.metric("Total Penyewaan", f"{int(filtered_df['cnt'].sum()):,}")
-    col2.metric("Total Casual", f"{int(filtered_df['casual'].sum()):,}")
-    col3.metric("Total Registered", f"{int(filtered_df['registered'].sum()):,}")
-    
-    st.markdown("### 🔍 Insight Utama")
+st.markdown("### 🔍 Insight Utama")
 
-    if analysis_level == "Hourly":
-        st.success("""
-        Aktivitas penyewaan paling tinggi terjadi pada jam sibuk, terutama pagi dan sore hari.
-        Pada hari kerja, pengguna terdaftar mendominasi karena penggunaan cenderung untuk aktivitas rutin.
-        Sementara itu, pada waktu santai dan akhir pekan, pengguna casual terlihat lebih aktif.
-        """)
-    else:
-        st.success("""
-        Kondisi cuaca memiliki pengaruh besar terhadap jumlah penyewaan sepeda.
-        Cuaca cerah menghasilkan jumlah penyewaan tertinggi, sedangkan hujan menurunkan penggunaan secara signifikan.
-        Hal ini menunjukkan bahwa kenyamanan lingkungan menjadi faktor penting bagi pengguna.
-        """)
-
-
-# TAB 2 - ANALISIS CUACA
-with tab2:
-
-    st.subheader("📊 Pengaruh Faktor Lingkungan terhadap Penyewaan Sepeda")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        fig, ax = plt.subplots()
-        corr = filtered_df[["cnt", "temp", "hum", "windspeed"]].corr()
-        sns.heatmap(corr, annot=True, ax=ax)
-        ax.set_title("Korelasi Variabel Cuaca")
-        st.pyplot(fig)
-
-    with col2:
-        weather_df = filtered_df.groupby("weather_condition")["cnt"].mean().reset_index()
-
-        fig, ax = plt.subplots()
-        sns.barplot(data=weather_df, x="weather_condition", y="cnt", ax=ax)
-        ax.set_ylabel("Rata-rata Penyewaan")
-        ax.set_title("Rata-rata Penyewaan per Kondisi Cuaca")
-        st.pyplot(fig)
-
-    st.caption("""
-    Suhu memiliki pengaruh paling besar terhadap peningkatan jumlah penyewaan.
-    Sebaliknya, angin dan kelembapan cenderung menurunkan minat pengguna.
-    Selain itu, kondisi cuaca cerah terbukti menjadi kondisi paling ideal untuk aktivitas bersepeda.
+if analysis_level == "Hourly":
+    st.success("""
+    Aktivitas penyewaan paling tinggi terjadi pada jam sibuk, terutama pagi dan sore hari.
+    Pada hari kerja, pengguna terdaftar mendominasi karena penggunaan cenderung untuk aktivitas rutin.
+    Sementara itu, pada waktu santai dan akhir pekan, pengguna casual terlihat lebih aktif.
+    """)
+else:
+    st.success("""
+    Kondisi cuaca memiliki pengaruh besar terhadap jumlah penyewaan sepeda.
+    Cuaca cerah menghasilkan jumlah penyewaan tertinggi, sedangkan hujan menurunkan penggunaan secara signifikan.
+    Hal ini menunjukkan bahwa kenyamanan lingkungan menjadi faktor penting bagi pengguna.
     """)
 
-    # Insight tambahan otomatis
-    top_weather = weather_df.sort_values("cnt", ascending=False).iloc[0]["weather_condition"]
-    st.info(f"Kondisi dengan penyewaan tertinggi: {top_weather}")
+# PERTANYAAN 1
+
+st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig, ax = plt.subplots()
+    corr = filtered_df[["cnt", "temp", "hum", "windspeed"]].corr()
+    sns.heatmap(corr, annot=True, ax=ax)
+    ax.set_title("Korelasi Variabel")
+    st.pyplot(fig)
+
+with col2:
+    fig, ax = plt.subplots()
+    sns.regplot(x="temp", y="cnt", data=filtered_df, ax=ax)
+    ax.set_title("Suhu vs Penyewaan")
+    st.pyplot(fig)
+
+col3, col4 = st.columns(2)
+
+with col3:
+    fig, ax = plt.subplots()
+    sns.regplot(x="hum", y="cnt", data=filtered_df, ax=ax)
+    ax.set_title("Kelembapan vs Penyewaan")
+    st.pyplot(fig)
+
+with col4:
+    fig, ax = plt.subplots()
+    sns.regplot(x="windspeed", y="cnt", data=filtered_df, ax=ax)
+    ax.set_title("Windspeed vs Penyewaan")
+    st.pyplot(fig)
+
+st.info("""
+Insight:
+- Suhu memiliki pengaruh paling kuat (positif)
+- Windspeed berdampak negatif
+- Kelembapan pengaruhnya lemah
+""")
+
+# PERTANYAAN 2
+st.markdown("## 🌤️ Analisis Kondisi Cuaca")
+
+weather_stats = filtered_df.groupby("weather_condition")["cnt"].agg(["mean", "sum"]).reset_index()
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig, ax = plt.subplots()
+    sns.barplot(data=weather_stats, x="weather_condition", y="sum", ax=ax)
+    ax.set_title("Total Penyewaan per Cuaca")
+    st.pyplot(fig)
+
+with col2:
+    fig, ax = plt.subplots()
+    sns.barplot(data=weather_stats, x="weather_condition", y="mean", ax=ax)
+    ax.set_title("Rata-rata Penyewaan per Cuaca")
+    st.pyplot(fig)
+
+# Tren waktu (khusus daily)
+if "dteday" in filtered_df.columns:
+    fig, ax = plt.subplots()
+    sns.lineplot(data=filtered_df, x="dteday", y="cnt", hue="weather_condition", ax=ax)
+    plt.xticks(rotation=30)
+    ax.set_title("Tren Penyewaan berdasarkan Cuaca")
+    st.pyplot(fig)
+
+top_weather = weather_stats.sort_values("sum", ascending=False).iloc[0]["weather_condition"]
+
+st.success(f"Kondisi terbaik untuk penyewaan: {top_weather}")
 
 
-# TAB 3 - POLA WAKTU
-with tab3:
-
+# POLA WAKTU
+    
     if analysis_level == "Hourly":
 
-        st.subheader("⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
+        st.markdown("⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
 
         def time_cluster(hour):
             if (7 <= hour <= 9) or (17 <= hour <= 19):
