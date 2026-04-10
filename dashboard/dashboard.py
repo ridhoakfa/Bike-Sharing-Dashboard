@@ -98,16 +98,6 @@ if len(available_dates) > 0:
 else:
     st.warning("Tidak ada data tersedia untuk filter yang dipilih.")
 
-selected_dates = st.sidebar.multiselect(
-    "Pilih Tanggal",
-    options=available_dates,
-    default=available_dates[:7]  # default 7 hari pertama
-)
-
-filtered_df = filtered_df[
-    filtered_df["dteday"].dt.date.isin(selected_dates)
-]
-
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
