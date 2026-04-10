@@ -192,9 +192,9 @@ st.success(f"Kondisi terbaik untuk penyewaan: {top_weather}")
 
 # POLA WAKTU
     
-    if analysis_level == "Hourly":
+if analysis_level == "Hourly":
 
-        st.markdown("⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
+    st.markdown("⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
 
         def time_cluster(hour):
             if (7 <= hour <= 9) or (17 <= hour <= 19):
