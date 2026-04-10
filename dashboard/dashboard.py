@@ -246,9 +246,9 @@ if "dteday" in filtered_df.columns:
 
     fig, ax = plt.subplots()
     if analysis_level == "Hourly":
-    y_col = "cnt_smooth"
+        y_col = "cnt_smooth"
     else:
-    y_col = "cnt"
+        y_col = "cnt"
 
     sns.lineplot(data=trend_df, x="dteday", y=y_col, hue="weather_condition", ax=ax)
 
