@@ -111,21 +111,21 @@ col1, col2 = st.columns(2)
 
 with col1:
 # AGREGASI (penting untuk hourly)
-agg_df = filtered_df.copy()
+    agg_df = filtered_df.copy()
 
-if analysis_level == "Hourly":
-    agg_df = agg_df.groupby("dteday").agg({
-        "cnt": "sum",
-        "temp": "mean",
-        "hum": "mean",
-        "windspeed": "mean"
-    }).reset_index()
+    if analysis_level == "Hourly":
+        agg_df = agg_df.groupby("dteday").agg({
+            "cnt": "sum",
+            "temp": "mean",
+            "hum": "mean",
+            "windspeed": "mean"
+        }).reset_index()
 
-fig, ax = plt.subplots()
-corr = agg_df[["cnt", "temp", "hum", "windspeed"]].corr()
-sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-ax.set_title("Korelasi Variabel Lingkungan")
-st.pyplot(fig)
+    fig, ax = plt.subplots()
+    corr = agg_df[["cnt", "temp", "hum", "windspeed"]].corr()
+    sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+    ax.set_title("Korelasi Variabel")
+    st.pyplot(fig)
 
 with col2:
     fig, ax = plt.subplots()
