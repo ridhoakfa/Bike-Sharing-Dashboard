@@ -54,7 +54,7 @@ weather = st.sidebar.multiselect(
     default=df["weather_condition"].unique()
 )
 
-# Filtering
+# FILTERING
 filtered_df = df.copy()
 
 if workingday == "Working Day":
@@ -71,25 +71,32 @@ filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
 min_date = filtered_df["dteday"].min().date()
 max_date = filtered_df["dteday"].max().date()
 
-preset = st.sidebar.selectbox(
-    "Pilih Rentang Waktu",
-    ["Semua Data", "30 Hari Terakhir", "90 Hari Terakhir"]
+# Date input (dibatasi dataset)
+date_range = st.sidebar.date_input(
+    "Filter Tanggal",
+    value=(min_date, max_date),
+    min_value=min_date,
+    max_value=max_date
 )
 
-max_date = filtered_df["dteday"].max()
+# Handle Quick Select
+if isinstance(date_range, tuple) and len(date_range) == 2:
+    start_date, end_date = date_range
 
-if preset == "30 Hari Terakhir":
-    start_date = max_date - pd.Timedelta(days=30)
-elif preset == "90 Hari Terakhir":
-    start_date = max_date - pd.Timedelta(days=90)
+    # Clamp agar tidak keluar dari range dataset
+    start_date = max(start_date, min_date)
+    end_date = min(end_date, max_date)
+
 else:
-    start_date = filtered_df["dteday"].min()
+    start_date = end_date = date_range
+    start_date = max(start_date, min_date)
+    end_date = min(end_date, max_date)
 
+# Filter aman
 filtered_df = filtered_df[
-    (filtered_df["dteday"] >= start_date) &
-    (filtered_df["dteday"] <= max_date)
+    (filtered_df["dteday"].dt.date >= start_date) &
+    (filtered_df["dteday"].dt.date <= end_date)
 ]
-
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
