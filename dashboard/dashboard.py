@@ -29,6 +29,9 @@ BASE_DIR = os.path.dirname(__file__)
 hour_df = pd.read_csv(os.path.join(BASE_DIR, "main_data.csv"))
 day_df = pd.read_csv(os.path.join(BASE_DIR, "day.csv"))
 
+hour_df["dteday"] = pd.to_datetime(hour_df["dteday"])
+day_df["dteday"] = pd.to_datetime(day_df["dteday"])
+
 # Pilih dataset
 if analysis_level == "Hourly":
     df = hour_df.copy()
