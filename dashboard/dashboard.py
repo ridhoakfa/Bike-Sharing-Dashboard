@@ -61,6 +61,16 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
+date_range = st.sidebar.date_input(
+    "Filter Tanggal",
+    [filtered_df["dteday"].min(), filtered_df["dteday"].max()]
+)
+
+filtered_df = filtered_df[
+    (filtered_df["dteday"] >= pd.to_datetime(date_range[0])) &
+    (filtered_df["dteday"] <= pd.to_datetime(date_range[1]))
+]
+
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
@@ -97,12 +107,16 @@ registered_ratio = filtered_df["registered"].sum() / total
 st.success(f"""
 Insight Utama:
 
-- Total penyewaan mencapai **{total:,.0f}** dengan dominasi pengguna **registered ({registered_ratio:.1%})**
-  dibandingkan **casual ({casual_ratio:.1%})**.
-- Hal ini menunjukkan bahwa penggunaan sepeda lebih banyak bersifat **rutin (komuter)** dibanding rekreasional.
-- Faktor lingkungan seperti **suhu dan cuaca** tetap menjadi pendorong utama naik turunnya penyewaan.
+- Total penyewaan mencapai **{total:,.0f}**, dengan dominasi pengguna **registered ({registered_ratio:.1%})**,
+  menunjukkan bahwa layanan ini lebih banyak digunakan untuk **kebutuhan rutin (commuting)** dibanding rekreasi.
+- Pola ini konsisten di seluruh filter, di mana pengguna registered tetap menjadi kontributor utama.
+- Selain itu, faktor lingkungan seperti **suhu dan kondisi cuaca** terbukti memiliki pengaruh signifikan
+  terhadap fluktuasi jumlah penyewaan.
+- Dengan demikian, sistem bike sharing ini dapat dikategorikan sebagai layanan yang **utility-driven**,
+  bukan sekadar leisure.
 """)
 
+st.markdown("---")
 # PERTANYAAN 1
 
 st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
@@ -110,7 +124,7 @@ st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 col1, col2 = st.columns(2)
 
 with col1:
-# AGREGASI (penting untuk hourly)
+# AGREGASI
     agg_df = filtered_df.copy()
 
     if analysis_level == "Hourly":
@@ -161,7 +175,7 @@ Insight:
   cenderung menurunkan kenyamanan dan jumlah penyewaan.
 - Secara keseluruhan, faktor lingkungan berpengaruh, namun **suhu adalah driver utama**.
 """)
-
+st.markdown("---")
 # PERTANYAAN 2
 st.markdown("## 🌤️ Analisis Kondisi Cuaca")
 
@@ -189,7 +203,7 @@ with col2:
     ax.set_ylabel("Rata-rata Penyewaan")
     st.pyplot(fig)
 
-# Tren waktu (khusus daily)
+# Tren waktu
 if "dteday" in filtered_df.columns:
     filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
     fig, ax = plt.subplots()
@@ -198,8 +212,12 @@ if "dteday" in filtered_df.columns:
     if analysis_level == "Hourly":
         trend_df = trend_df.groupby(["dteday", "weather_condition"])["cnt"].sum().reset_index()
 
+        # smoothing (rolling average)
+        trend_df["cnt_smooth"] = trend_df.groupby("weather_condition")["cnt"]\
+            .transform(lambda x: x.rolling(window=7, min_periods=1).mean())
+
     fig, ax = plt.subplots()
-    sns.lineplot(data=trend_df, x="dteday", y="cnt", hue="weather_condition", ax=ax)
+    sns.lineplot(data=trend_df, x="dteday", y="cnt_smooth", hue="weather_condition", ax=ax)
 
     ax.set_title("Tren Penyewaan Berdasarkan Cuaca")
     ax.set_xlabel("Tanggal")
@@ -213,14 +231,17 @@ if "dteday" in filtered_df.columns:
 st.success(f"""
 Insight:
 
-- Kondisi dengan penyewaan tertinggi adalah **{top_weather}**, menunjukkan kondisi ini paling ideal.
-- Cuaca cerah menghasilkan aktivitas tertinggi karena faktor kenyamanan.
-- Cuaca buruk seperti hujan menyebabkan penurunan signifikan dalam penyewaan.
-- Pengguna masih cukup toleran terhadap cuaca berawan, namun tidak terhadap hujan.
+- Kondisi dengan penyewaan tertinggi adalah **{top_weather}**, yang menunjukkan bahwa kondisi ini paling optimal
+  bagi pengguna untuk beraktivitas menggunakan sepeda.
+- Terlihat bahwa **cuaca cerah secara konsisten menghasilkan jumlah penyewaan tertinggi**, karena memberikan kenyamanan maksimal.
+- **Cuaca berawan masih cukup toleran**, dengan penurunan yang tidak terlalu drastis.
+- Namun, ketika memasuki kondisi **hujan (ringan maupun lebat)**, terjadi penurunan signifikan,
+  yang menunjukkan bahwa faktor cuaca buruk menjadi hambatan utama.
+- Pola ini mengindikasikan bahwa keputusan pengguna sangat sensitif terhadap **kenyamanan lingkungan**, terutama kondisi hujan.
 """)
 
 # ANALISIS LANJUTAN
-    
+st.markdown("---")    
 if analysis_level == "Hourly":
 
     st.markdown("## ⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
