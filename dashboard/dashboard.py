@@ -64,6 +64,40 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
+# Pastikan kolom datetime
+filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
+
+# Ambil tanggal unik yang tersedia
+available_dates = sorted(filtered_df["dteday"].dt.date.unique())
+
+# Cegah error jika data kosong setelah filter lain
+if len(available_dates) > 0:
+
+    min_date = min(available_dates)
+    max_date = max(available_dates)
+
+    date_range = st.sidebar.date_input(
+        "Filter Tanggal",
+        value=(min_date, max_date),
+        min_value=min_date,
+        max_value=max_date
+    )
+
+    # Validasi jika user pilih 1 tanggal saja
+    if isinstance(date_range, tuple) and len(date_range) == 2:
+        start_date, end_date = date_range
+    else:
+        start_date = end_date = date_range
+
+    # Filter data
+    filtered_df = filtered_df[
+        (filtered_df["dteday"].dt.date >= start_date) &
+        (filtered_df["dteday"].dt.date <= end_date)
+    ]
+
+else:
+    st.warning("Tidak ada data tersedia untuk filter yang dipilih.")
+
 selected_dates = st.sidebar.multiselect(
     "Pilih Tanggal",
     options=available_dates,
