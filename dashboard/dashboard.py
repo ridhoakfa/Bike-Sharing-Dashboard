@@ -196,67 +196,67 @@ if analysis_level == "Hourly":
 
     st.markdown("⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
 
-        def time_cluster(hour):
-            if (7 <= hour <= 9) or (17 <= hour <= 19):
-                return "Commute Time"
-            elif 10 <= hour <= 16:
-                return "Leisure Time"
-            else:
-                return "Off Time"
+    def time_cluster(hour):
+        if (7 <= hour <= 9) or (17 <= hour <= 19):
+            return "Commute Time"
+        elif 10 <= hour <= 16:
+            return "Leisure Time"
+        else:
+            return "Off Time"
 
-        filtered_df["TimeCluster"] = filtered_df["hr"].apply(time_cluster)
+    filtered_df["TimeCluster"] = filtered_df["hr"].apply(time_cluster)
 
-        cluster_summary = filtered_df.groupby(["TimeCluster", "workingday"]).agg({
-            "casual": "mean",
-            "registered": "mean"
-        }).reset_index()
+    cluster_summary = filtered_df.groupby(["TimeCluster", "workingday"]).agg({
+        "casual": "mean",
+        "registered": "mean"
+     }).reset_index()
 
-        labels = ["Commute Time", "Leisure Time", "Off Time"]
-        x = np.arange(len(labels))
-        width = 0.35
+    labels = ["Commute Time", "Leisure Time", "Off Time"]
+    x = np.arange(len(labels))
+    width = 0.35
 
-        wd = cluster_summary[cluster_summary["workingday"] == 1].set_index("TimeCluster").reindex(labels).fillna(0)
-        nwd = cluster_summary[cluster_summary["workingday"] == 0].set_index("TimeCluster").reindex(labels).fillna(0)
+    wd = cluster_summary[cluster_summary["workingday"] == 1].set_index("TimeCluster").reindex(labels).fillna(0)
+    nwd = cluster_summary[cluster_summary["workingday"] == 0].set_index("TimeCluster").reindex(labels).fillna(0)
 
-        colors = {
-        "wd_casual": "#A5D8FF",
-        "wd_registered": "#1C7ED6",
-        "nwd_casual": "#B2F2BB",
-        "nwd_registered": "#2B8A3E"
-        }
+    colors = {
+    "wd_casual": "#A5D8FF",
+    "wd_registered": "#1C7ED6",
+    "nwd_casual": "#B2F2BB",
+    "nwd_registered": "#2B8A3E"
+    }
 
-        fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
 
-        ax.bar(x - width/2, wd["casual"], width, color=colors["wd_casual"], label="Casual (Working Day)")
-        ax.bar(x - width/2, wd["registered"], width, bottom=wd["casual"], color=colors["wd_registered"], label="Registered (Working Day)")
+    ax.bar(x - width/2, wd["casual"], width, color=colors["wd_casual"], label="Casual (Working Day)")
+    ax.bar(x - width/2, wd["registered"], width, bottom=wd["casual"], color=colors["wd_registered"], label="Registered (Working Day)")
 
-        ax.bar(x + width/2, nwd["casual"], width, color=colors["nwd_casual"], label="Casual (Non-Working Day)")
-        ax.bar(x + width/2, nwd["registered"], width, bottom=nwd["casual"], color=colors["nwd_registered"], label="Registered (Non-Working Day)")
+    ax.bar(x + width/2, nwd["casual"], width, color=colors["nwd_casual"], label="Casual (Non-Working Day)")
+    ax.bar(x + width/2, nwd["registered"], width, bottom=nwd["casual"], color=colors["nwd_registered"], label="Registered (Non-Working Day)")
 
-        ax.set_xticks(x)
-        ax.set_xticklabels(labels)
-        ax.set_ylabel("Rata-rata Penyewaan")
-        ax.set_title("Pola Penggunaan Berdasarkan Waktu")
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.set_ylabel("Rata-rata Penyewaan")
+    ax.set_title("Pola Penggunaan Berdasarkan Waktu")
 
-        ax.legend()
-        ax.grid(axis='y', linestyle='--', alpha=0.5)
+    ax.legend()
+    ax.grid(axis='y', linestyle='--', alpha=0.5)
 
-        st.pyplot(fig)
+    st.pyplot(fig)
 
-        st.caption("""
-        Pengguna terdaftar mendominasi total penyewaan pada hari kerja, terutama saat jam sibuk (Commute Time).
-        Sebaliknya, pengguna kasual menunjukkan lonjakan proporsi yang signifikan pada hari libur,
-        khususnya selama waktu luang (Leisure Time).
-        Pola penyewaan menurun drastis saat malam hari (Off Time) di seluruh kategori pengguna.
-        """)
+    st.caption("""
+    Pengguna terdaftar mendominasi total penyewaan pada hari kerja, terutama saat jam sibuk (Commute Time).
+    Sebaliknya, pengguna kasual menunjukkan lonjakan proporsi yang signifikan pada hari libur,
+    khususnya selama waktu luang (Leisure Time).
+    Pola penyewaan menurun drastis saat malam hari (Off Time) di seluruh kategori pengguna.
+    """)
 
-    else:
-        st.info("Analisis waktu hanya tersedia pada data hourly.")
+else:
+    st.info("Analisis waktu hanya tersedia pada data hourly.")
 
-        st.caption("""
-        Data harian tidak memiliki informasi jam, sehingga analisis pola waktu tidak dapat dilakukan.
-        Gunakan mode hourly untuk melihat pola penggunaan berdasarkan waktu.
-        """)
+    st.caption("""
+    Data harian tidak memiliki informasi jam, sehingga analisis pola waktu tidak dapat dilakukan.
+    Gunakan mode hourly untuk melihat pola penggunaan berdasarkan waktu.
+    """)
 
 
 # FOOTER
