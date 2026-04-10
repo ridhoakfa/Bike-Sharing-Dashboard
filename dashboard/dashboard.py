@@ -327,19 +327,32 @@ if analysis_level == "Hourly":
 
     st.pyplot(fig)
 
-    st.caption("""
-    Pengguna terdaftar mendominasi total penyewaan pada hari kerja, terutama saat jam sibuk (Commute Time).
-    Sebaliknya, pengguna kasual menunjukkan lonjakan proporsi yang signifikan pada hari libur,
-    khususnya selama waktu luang (Leisure Time).
-    Pola penyewaan menurun drastis saat malam hari (Off Time) di seluruh kategori pengguna.
+    st.info("""
+    Insight:
+
+    - Pada **Working Day**, penyewaan didominasi oleh **pengguna registered**, terutama pada **Commute Time**.
+  Hal ini menunjukkan bahwa sepeda banyak digunakan untuk **aktivitas rutin seperti berangkat dan pulang kerja**.
+
+    - Sebaliknya, pada **Non-Working Day**, terjadi peningkatan signifikan pada **pengguna casual**,
+  khususnya pada **Leisure Time**, yang mengindikasikan penggunaan lebih bersifat **rekreasional**.
+
+    - Perbandingan ini menegaskan adanya **perbedaan perilaku pengguna berdasarkan jenis hari**:
+      - Hari kerja → dominan **utility-driven (transportasi)**
+      - Hari libur → dominan **leisure-driven (rekreasi)**
+
+    - Pada **Off Time (malam hari)**, jumlah penyewaan menurun drastis di semua kategori,
+      menunjukkan bahwa faktor waktu (gelap/malam) menjadi **batas alami aktivitas penggunaan sepeda**.
+
+    - Secara keseluruhan, pola ini memperlihatkan bahwa **waktu dan jenis hari adalah faktor kunci**
+      dalam menentukan segmentasi pengguna dan intensitas penyewaan.
     """)
 
 else:
-    st.info("Analisis waktu hanya tersedia pada data hourly.")
+    st.info("""
+    Analisis waktu tidak tersedia pada level data harian (daily), karena tidak terdapat variabel jam (hour).
 
-    st.caption("""
-    Data harian tidak memiliki informasi jam, sehingga analisis pola waktu tidak dapat dilakukan.
-    Gunakan mode hourly untuk melihat pola penggunaan berdasarkan waktu.
+    Untuk memahami pola penggunaan berdasarkan waktu secara lebih detail,
+    silakan gunakan mode **Hourly Analysis**.
     """)
 
 
