@@ -61,7 +61,6 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
-st.sidebar.markdown("### Filter Tambahan")
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
