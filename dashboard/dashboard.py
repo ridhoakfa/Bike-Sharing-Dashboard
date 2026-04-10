@@ -152,9 +152,14 @@ with col4:
 
 st.info("""
 Insight:
-- Suhu memiliki pengaruh paling kuat (positif)
-- Windspeed berdampak negatif
-- Kelembapan pengaruhnya lemah
+
+- **Suhu (temp)** menunjukkan hubungan positif yang paling kuat dengan jumlah penyewaan,
+  yang berarti semakin hangat kondisi cuaca, semakin tinggi minat pengguna.
+- **Kelembapan (hum)** memiliki hubungan negatif yang lemah, sehingga bukan faktor utama
+  dalam menentukan keputusan pengguna.
+- **Kecepatan angin (windspeed)** menunjukkan pengaruh negatif, di mana kondisi berangin
+  cenderung menurunkan kenyamanan dan jumlah penyewaan.
+- Secara keseluruhan, faktor lingkungan berpengaruh, namun **suhu adalah driver utama**.
 """)
 
 # PERTANYAAN 2
@@ -167,13 +172,21 @@ col1, col2 = st.columns(2)
 with col1:
     fig, ax = plt.subplots()
     sns.barplot(data=weather_stats, x="weather_condition", y="sum", ax=ax)
-    ax.set_title("Total Penyewaan per Cuaca")
+
+    for i, v in enumerate(weather_stats["sum"]):
+        ax.text(i, v, f"{v:,.0f}", ha="center", va="bottom")
+
+    ax.set_title("Total Penyewaan per Kondisi Cuaca")
+    ax.set_xlabel("Kondisi Cuaca")
+    ax.set_ylabel("Total Penyewaan")
     st.pyplot(fig)
 
 with col2:
     fig, ax = plt.subplots()
     sns.barplot(data=weather_stats, x="weather_condition", y="mean", ax=ax)
     ax.set_title("Rata-rata Penyewaan per Cuaca")
+    ax.set_xlabel("Kondisi Cuaca")
+    ax.set_ylabel("Rata-rata Penyewaan")
     st.pyplot(fig)
 
 # Tren waktu (khusus daily)
@@ -188,6 +201,14 @@ top_weather = weather_stats.sort_values("sum", ascending=False).iloc[0]["weather
 
 st.success(f"Kondisi terbaik untuk penyewaan: {top_weather}")
 
+st.success(f"""
+Insight:
+
+- Kondisi dengan penyewaan tertinggi adalah **{top_weather}**, menunjukkan kondisi ini paling ideal.
+- Cuaca cerah menghasilkan aktivitas tertinggi karena faktor kenyamanan.
+- Cuaca buruk seperti hujan menyebabkan penurunan signifikan dalam penyewaan.
+- Pengguna masih cukup toleran terhadap cuaca berawan, namun tidak terhadap hujan.
+""")
 
 # POLA WAKTU
     
