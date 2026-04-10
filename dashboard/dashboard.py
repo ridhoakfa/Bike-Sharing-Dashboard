@@ -64,14 +64,14 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
-date_range = st.sidebar.date_input(
-    "Filter Tanggal",
-    [filtered_df["dteday"].min(), filtered_df["dteday"].max()]
+selected_dates = st.sidebar.multiselect(
+    "Pilih Tanggal",
+    options=available_dates,
+    default=available_dates[:7]  # default 7 hari pertama
 )
 
 filtered_df = filtered_df[
-    (filtered_df["dteday"] >= pd.to_datetime(date_range[0])) &
-    (filtered_df["dteday"] <= pd.to_datetime(date_range[1]))
+    filtered_df["dteday"].dt.date.isin(selected_dates)
 ]
 
 
