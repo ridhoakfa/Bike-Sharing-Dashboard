@@ -123,28 +123,31 @@ with col1:
 
     fig, ax = plt.subplots()
     corr = agg_df[["cnt", "temp", "hum", "windspeed"]].corr()
-    sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+    sns.heatmap(corr, annot=True, fmt=".2f", ax=ax)
     ax.set_title("Korelasi Variabel")
     st.pyplot(fig)
 
 with col2:
     fig, ax = plt.subplots()
-    sns.regplot(x="temp", y="cnt", data=filtered_df, ax=ax)
-    ax.set_title("Suhu vs Penyewaan")
+    sns.regplot(x="temp", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
+    ax.set_xlabel("Suhu")
+    ax.set_ylabel("Jumlah Penyewaan")
     st.pyplot(fig)
 
 col3, col4 = st.columns(2)
 
 with col3:
     fig, ax = plt.subplots()
-    sns.regplot(x="hum", y="cnt", data=filtered_df, ax=ax)
-    ax.set_title("Kelembapan vs Penyewaan")
+    sns.regplot(x="hum", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
+    ax.set_xlabel("Kelembaban")
+    ax.set_ylabel("Jumlah Penyewaan")
     st.pyplot(fig)
 
 with col4:
     fig, ax = plt.subplots()
-    sns.regplot(x="windspeed", y="cnt", data=filtered_df, ax=ax)
-    ax.set_title("Windspeed vs Penyewaan")
+    sns.regplot(x="windspeed", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
+    ax.set_xlabel("Kecepatan Angin")
+    ax.set_ylabel("Jumlah Penyewaan")
     st.pyplot(fig)
 
 st.info("""
