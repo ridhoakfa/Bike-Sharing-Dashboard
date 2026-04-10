@@ -205,6 +205,7 @@ Insight:
 - Secara keseluruhan, faktor lingkungan berpengaruh, namun **suhu adalah driver utama**.
 """)
 st.markdown("---")
+
 # PERTANYAAN 2
 st.markdown("## 🌤️ Analisis Kondisi Cuaca")
 
@@ -229,7 +230,7 @@ with col2:
     sns.barplot(data=weather_stats, x="weather_condition", y="mean", ax=ax)
 
     for i, v in enumerate(weather_stats["mean"]):
-    ax.text(i, v, f"{v:,.0f}", ha="center", va="bottom")
+        ax.text(i, v, f"{v:,.0f}", ha="center", va="bottom")
     
     ax.set_title("Rata-rata Penyewaan per Cuaca")
     ax.set_xlabel("Kondisi Cuaca")
