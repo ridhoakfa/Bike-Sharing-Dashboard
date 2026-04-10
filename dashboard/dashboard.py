@@ -235,7 +235,6 @@ with col2:
 # Tren waktu
 if "dteday" in filtered_df.columns:
     filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
-    fig, ax = plt.subplots()
     trend_df = filtered_df.copy()
 
     if analysis_level == "Hourly":
@@ -246,7 +245,12 @@ if "dteday" in filtered_df.columns:
             .transform(lambda x: x.rolling(window=7, min_periods=1).mean())
 
     fig, ax = plt.subplots()
-    sns.lineplot(data=trend_df, x="dteday", y="cnt_smooth", hue="weather_condition", ax=ax)
+        if analysis_level == "Hourly":
+        y_col = "cnt_smooth"
+        else:
+        y_col = "cnt"
+
+    sns.lineplot(data=trend_df, x="dteday", y=y_col, hue="weather_condition", ax=ax)
 
     ax.set_title("Tren Penyewaan Berdasarkan Cuaca")
     ax.set_xlabel("Tanggal")
