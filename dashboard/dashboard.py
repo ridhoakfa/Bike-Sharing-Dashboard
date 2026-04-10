@@ -90,18 +90,18 @@ st.markdown("---")
     
 st.markdown("### 🔍 Insight Utama")
 
-if analysis_level == "Hourly":
-    st.success("""
-    Aktivitas penyewaan paling tinggi terjadi pada jam sibuk, terutama pagi dan sore hari.
-    Pada hari kerja, pengguna terdaftar mendominasi karena penggunaan cenderung untuk aktivitas rutin.
-    Sementara itu, pada waktu santai dan akhir pekan, pengguna casual terlihat lebih aktif.
-    """)
-else:
-    st.success("""
-    Kondisi cuaca memiliki pengaruh besar terhadap jumlah penyewaan sepeda.
-    Cuaca cerah menghasilkan jumlah penyewaan tertinggi, sedangkan hujan menurunkan penggunaan secara signifikan.
-    Hal ini menunjukkan bahwa kenyamanan lingkungan menjadi faktor penting bagi pengguna.
-    """)
+total = filtered_df["cnt"].sum()
+casual_ratio = filtered_df["casual"].sum() / total
+registered_ratio = filtered_df["registered"].sum() / total
+
+st.success(f"""
+Insight Utama:
+
+- Total penyewaan mencapai **{total:,.0f}** dengan dominasi pengguna **registered ({registered_ratio:.1%})**
+  dibandingkan **casual ({casual_ratio:.1%})**.
+- Hal ini menunjukkan bahwa penggunaan sepeda lebih banyak bersifat **rutin (komuter)** dibanding rekreasional.
+- Faktor lingkungan seperti **suhu dan cuaca** tetap menjadi pendorong utama naik turunnya penyewaan.
+""")
 
 # PERTANYAAN 1
 
