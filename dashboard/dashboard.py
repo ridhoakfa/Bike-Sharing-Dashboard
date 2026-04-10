@@ -274,10 +274,11 @@ Insight:
 """)
 
 # ANALISIS LANJUTAN
-st.markdown("---")    
+st.markdown("## 🔍 Analisis Lanjutan")
+st.markdown("---")   
 if analysis_level == "Hourly":
 
-    st.markdown("## ⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
+    st.markdown("### ⏰ Clustering Waktu Penggunaan Sepeda (Casual vs Registered)")
 
     def time_cluster(hour):
         if (7 <= hour <= 9) or (17 <= hour <= 19):
