@@ -64,39 +64,42 @@ elif workingday == "Non-Working Day":
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
-# Pastikan kolom datetime
+# Pastikan datetime
 filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
 
-# Ambil batas tanggal dari data
+# Ambil batas dari data
 min_date = filtered_df["dteday"].min().date()
 max_date = filtered_df["dteday"].max().date()
 
-# Date input (dibatasi dataset)
-date_range = st.sidebar.date_input(
-    "Filter Tanggal",
-    value=(min_date, max_date),
+st.sidebar.markdown("### Filter Tanggal")
+
+# Input manual
+start_date = st.sidebar.date_input(
+    "Tanggal Mulai",
+    value=min_date,
     min_value=min_date,
     max_value=max_date
 )
 
-# Handle Quick Select
-if isinstance(date_range, tuple) and len(date_range) == 2:
-    start_date, end_date = date_range
+end_date = st.sidebar.date_input(
+    "Tanggal Akhir",
+    value=max_date,
+    min_value=min_date,
+    max_value=max_date
+)
 
-    # Clamp agar tidak keluar dari range dataset
-    start_date = max(start_date, min_date)
-    end_date = min(end_date, max_date)
+# Validasi jika user kebalik pilih
+if start_date > end_date:
+    st.sidebar.warning("Tanggal mulai lebih besar dari tanggal akhir. Otomatis disesuaikan.")
+    start_date, end_date = end_date, start_date
 
-else:
-    start_date = end_date = date_range
-    start_date = max(start_date, min_date)
-    end_date = min(end_date, max_date)
-
-# Filter aman
+# Filter
 filtered_df = filtered_df[
     (filtered_df["dteday"].dt.date >= start_date) &
     (filtered_df["dteday"].dt.date <= end_date)
 ]
+
+st.sidebar.caption(f"Rentang data: {min_date} sampai {max_date}")
 
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
