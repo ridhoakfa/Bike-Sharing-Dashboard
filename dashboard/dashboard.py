@@ -191,15 +191,24 @@ with col2:
 
 # Tren waktu (khusus daily)
 if "dteday" in filtered_df.columns:
+    filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
     fig, ax = plt.subplots()
-    sns.lineplot(data=filtered_df, x="dteday", y="cnt", hue="weather_condition", ax=ax)
-    plt.xticks(rotation=30)
-    ax.set_title("Tren Penyewaan berdasarkan Cuaca")
+    trend_df = filtered_df.copy()
+
+    if analysis_level == "Hourly":
+        trend_df = trend_df.groupby(["dteday", "weather_condition"])["cnt"].sum().reset_index()
+
+    fig, ax = plt.subplots()
+    sns.lineplot(data=trend_df, x="dteday", y="cnt", hue="weather_condition", ax=ax)
+
+    ax.set_title("Tren Penyewaan Berdasarkan Cuaca")
+    ax.set_xlabel("Tanggal")
+    ax.set_ylabel("Jumlah Penyewaan")
+    plt.xticks(rotation=45)
+
     st.pyplot(fig)
 
-top_weather = weather_stats.sort_values("sum", ascending=False).iloc[0]["weather_condition"]
-
-st.success(f"Kondisi terbaik untuk penyewaan: {top_weather}")
+    top_weather = weather_stats.sort_values("sum", ascending=False).iloc[0]["weather_condition"]
 
 st.success(f"""
 Insight:
