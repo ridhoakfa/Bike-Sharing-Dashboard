@@ -63,20 +63,6 @@ filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
 
 st.sidebar.markdown("### Filter Tambahan")
 
-# Range tanggal
-if "dteday" in df.columns:
-    df["dteday"] = pd.to_datetime(df["dteday"])
-    date_range = st.sidebar.date_input(
-        "Pilih Rentang Tanggal",
-        [df["dteday"].min(), df["dteday"].max()]
-    )
-
-    if len(date_range) == 2:
-        filtered_df = filtered_df[
-            (filtered_df["dteday"] >= pd.to_datetime(date_range[0])) &
-            (filtered_df["dteday"] <= pd.to_datetime(date_range[1]))
-        ]
-
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
 st.markdown("""
