@@ -120,7 +120,7 @@ st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
 st.markdown("""
 Dashboard ini menyajikan analisis lengkap untuk menjawab:
 1. Pengaruh faktor lingkungan terhadap penyewaan
-2. Dampak kondisi cuaca
+2. Dampak kondisi cuaca dan musim
 3. Pola perilaku pengguna berdasarkan waktu
 """)
 
