@@ -340,13 +340,33 @@ if "year" in filtered_df.columns and "month" in filtered_df.columns:
     else:
         st.warning("Data bulanan tidak tersedia untuk filter yang dipilih.")
 
-st.success("""
+top_season = season_avg.idxmax()
+top_season_val = season_avg.max()
+
+top_weather = weather_avg.idxmax()
+top_weather_val = weather_avg.max()
+
+interaction = box_df.groupby(["season_name", "weather_condition"])["cnt"].median().idxmax()
+
+st.success(f"""
 Insight:
-- **Musim Gugur (Fall)** merupakan periode dengan rata-rata penyewaan tertinggi, mengungguli Musim Panas.
-- Kondisi dengan penyewaan tertinggi adalah **Cuaca Cerah**, yang secara konsisten paling optimal bagi pengguna.
-- Interaksi menunjukkan bahwa kombinasi **Musim Gugur + Cuaca Cerah** memberikan median penyewaan tertinggi.
-- Namun, ketika terjadi **hujan (ringan/lebat)**, jumlah penyewaan turun drastis di semua musim.
-- Pola tren bulanan memperlihatkan puncak permintaan yang selalu terpusat di bulan September-Oktober (awal musim gugur).
+
+- Musim dengan rata-rata jumlah penyewaan tertinggi adalah **{top_season} ({top_season_val:.0f})**,
+  menunjukkan bahwa periode ini paling optimal untuk aktivitas bike sharing pada data yang ditampilkan.
+
+- Kondisi cuaca dengan rata-rata penyewaan tertinggi adalah **{top_weather} ({top_weather_val:.0f})**,
+  yang mengindikasikan bahwa kondisi cuaca berperan penting dalam menentukan tingkat penggunaan.
+
+- Distribusi pada boxplot menunjukkan adanya variasi jumlah penyewaan di setiap kombinasi musim dan cuaca,
+  yang menandakan bahwa **interaksi antara kedua faktor ini memengaruhi permintaan secara bersamaan**.
+
+- Kombinasi dengan median penyewaan tertinggi terjadi pada **{interaction[0]} + {interaction[1]}**.  
+
+- Pada kondisi cuaca yang kurang mendukung (seperti hujan), jumlah penyewaan cenderung lebih rendah
+  dibandingkan kondisi cuaca yang lebih baik.
+
+- Tren bulanan memperlihatkan adanya periode tertentu dengan peningkatan penyewaan,
+  yang mencerminkan pola musiman dalam penggunaan layanan bike sharing.
 """)
 
 # ANALISIS LANJUTAN
