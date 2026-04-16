@@ -159,7 +159,7 @@ st.markdown("---")
 
 st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 
-col1, col2 = st.columns(2)
+col1 = st.columns(1)
 
 with col1:
 # AGREGASI
@@ -179,28 +179,31 @@ with col1:
     ax.set_title("Korelasi Variabel")
     st.pyplot(fig)
 
-with col2:
-    fig, ax = plt.subplots()
-    sns.regplot(x="temp", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
-    ax.set_xlabel("Suhu")
-    ax.set_ylabel("Jumlah Penyewaan")
-    st.pyplot(fig)
+col2, col3, col4 = st.columns(3)
 
-col3, col4 = st.columns(2)
+with col2:
+    g1 = sns.jointplot(data=agg_df, x='temp', y='cnt', kind='reg', 
+                       scatter_kws={'alpha':0.4, 'color':'steelblue'}, 
+                       line_kws={'color':'darkred', 'linewidth':2},
+                       marginal_kws={'bins':25, 'fill':True, 'color':'steelblue'})
+    g1.fig.suptitle("Suhu vs Penyewaan", y=1.02)
+    st.pyplot(g1.figure)
 
 with col3:
-    fig, ax = plt.subplots()
-    sns.regplot(x="hum", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
-    ax.set_xlabel("Kelembaban")
-    ax.set_ylabel("Jumlah Penyewaan")
-    st.pyplot(fig)
+    g2 = sns.jointplot(data=agg_df, x='hum', y='cnt', kind='reg',
+                       scatter_kws={'alpha':0.4, 'color':'seagreen'},
+                       line_kws={'color':'darkred', 'linewidth':2},
+                       marginal_kws={'bins':25, 'fill':True, 'color':'seagreen'})
+    g2.fig.suptitle("Kelembapan vs Penyewaan", y=1.02)
+    st.pyplot(g2.figure)
 
 with col4:
-    fig, ax = plt.subplots()
-    sns.regplot(x="windspeed", y="cnt", data=agg_df, scatter_kws={"alpha":0.5}, ax=ax)
-    ax.set_xlabel("Kecepatan Angin")
-    ax.set_ylabel("Jumlah Penyewaan")
-    st.pyplot(fig)
+    g3 = sns.jointplot(data=agg_df, x='windspeed', y='cnt', kind='reg',
+                       scatter_kws={'alpha':0.4, 'color':'indianred'},
+                       line_kws={'color':'darkred', 'linewidth':2},
+                       marginal_kws={'bins':25, 'fill':True, 'color':'indianred'})
+    g3.fig.suptitle("Kecepatan Angin vs Penyewaan", y=1.02)
+    st.pyplot(g3.figure)
 
 st.info("""
 Insight:
