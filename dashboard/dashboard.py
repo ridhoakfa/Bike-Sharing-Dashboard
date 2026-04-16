@@ -243,7 +243,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig1, ax1 = plt.subplots(figsize=(8, 5))
-    sns.barplot(x=season_avg.index, y=season_avg.values, ax=ax1, palette='Set3', edgecolor='black')
+    sns.barplot(x=season_avg.index, y=season_avg.values, ax=ax1, palette='Set3', edgecolor='black', , legend=False)
     ax1.set_title('Rata-rata Penyewaan per Musim')
     ax1.set_ylabel('Rata-rata Jumlah Penyewaan')
     
@@ -259,7 +259,7 @@ with col1:
 
 with col2:
     fig2, ax2 = plt.subplots(figsize=(8, 5))
-    sns.barplot(x=weather_avg.index, y=weather_avg.values, ax=ax2, palette='Set2', edgecolor='black')
+    sns.barplot(x=weather_avg.index, y=weather_avg.values, ax=ax2, palette='Set2', edgecolor='black', , legend=False)
     ax2.set_title('Rata-rata Penyewaan per Kondisi Cuaca')
     ax2.set_ylabel('Rata-rata Jumlah Penyewaan')
     
@@ -271,10 +271,22 @@ with col2:
             
     ax2.set_ylim(0, weather_avg.max() + (weather_avg.max() * 0.15))
     st.pyplot(fig2)
+    if analysis_level == "Hourly":
+        st.caption("ℹ️ Dalam mode Hourly, nilai rata-rata adalah **penyewaan per jam**, sehingga angkanya lebih kecil dibandingkan mode Daily (penyewaan per hari).")
 
 # 2. Boxplot Interaksi Musim dan Cuaca
 st.markdown("### 📦 Distribusi Penyewaan: Interaksi Musim dan Cuaca")
 fig3, ax3 = plt.subplots(figsize=(14, 6))
+
+sns.boxplot(data=box_df, x='season_name', y='cnt', hue='weather_condition',
+            order=musim_tersedia,
+            hue_order=cuaca_tersedia,
+            palette='viridis', width=0.7, ax=ax3)
+
+ax3.set_title('Distribusi Penyewaan Sepeda: Interaksi Musim dan Kondisi Cuaca (2011-2012)')
+ax3.set_ylabel('Jumlah Penyewaan (cnt)')
+ax3.legend(title='Kondisi Cuaca', bbox_to_anchor=(1.02, 1), loc='upper left')
+st.pyplot(fig3)
 
 # Perbaikan Boxplot: Agregasi ke level harian khusus untuk mode Hourly
 if analysis_level == "Hourly":
@@ -283,31 +295,24 @@ if analysis_level == "Hourly":
 else:
     box_df = filtered_df.copy()
 
-sns.boxplot(data=box_df, x='season_name', y='cnt', hue='weather_condition',
-            order=musim_tersedia,
-            hue_order=cuaca_tersedia,
-            palette='viridis', width=0.7, ax=ax3)
-
-ax3.set_title('Interaksi Musim dan Kondisi Cuaca')
-ax3.set_ylabel('Jumlah Penyewaan (cnt)')
-ax3.legend(title='Kondisi Cuaca', bbox_to_anchor=(1.02, 1), loc='upper left')
-st.pyplot(fig3)
-
 # 3. Lineplot Tren Bulanan per Musim
 st.markdown("### 📈 Tren Rata-rata Penyewaan Bulanan per Musim")
 if "year" in filtered_df.columns and "month" in filtered_df.columns:
     monthly_season = filtered_df.groupby(['year', 'month', 'season_name'])['cnt'].mean().reset_index()
     monthly_season['date'] = pd.to_datetime(monthly_season[['year', 'month']].assign(day=1))
 
-    fig4, ax4 = plt.subplots(figsize=(14, 5))
-    sns.lineplot(data=monthly_season, x='date', y='cnt', hue='season_name',
-                 hue_order=musim_tersedia,
-                 palette='Set1', marker='o', linewidth=2.5, markersize=8, ax=ax4)
-    ax4.set_title('Tren Rata-rata Penyewaan Bulanan per Musim')
-    ax4.set_ylabel('Rata-rata Penyewaan')
-    ax4.legend(title='Musim', bbox_to_anchor=(1.02, 1), loc='upper left')
-    plt.xticks(rotation=45)
-    st.pyplot(fig4)
+    if not monthly_season.empty:
+        fig4, ax4 = plt.subplots(figsize=(14, 5))
+        sns.lineplot(data=monthly_season, x='date', y='cnt', hue='season_name',
+                     hue_order=musim_tersedia,
+                     palette='Set1', marker='o', linewidth=2.5, markersize=8, ax=ax4)
+        ax4.set_title('Tren Rata-rata Penyewaan Bulanan per Musim')
+        ax4.set_ylabel('Rata-rata Penyewaan')
+        ax4.legend(title='Musim', bbox_to_anchor=(1.02, 1), loc='upper left')
+        plt.xticks(rotation=45)
+        st.pyplot(fig4)
+    else:
+        st.warning("Data bulanan tidak tersedia untuk filter yang dipilih.")
 
 st.success("""
 Insight:
