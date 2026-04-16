@@ -243,7 +243,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     fig1, ax1 = plt.subplots(figsize=(8, 5))
-    sns.barplot(x=season_avg.index, y=season_avg.values, ax=ax1, palette='Set3', edgecolor='black', , legend=False)
+    sns.barplot(x=season_avg.index, y=season_avg.values, ax=ax1, palette='Set3', edgecolor='black', legend=False)
     ax1.set_title('Rata-rata Penyewaan per Musim')
     ax1.set_ylabel('Rata-rata Jumlah Penyewaan')
     
@@ -259,7 +259,7 @@ with col1:
 
 with col2:
     fig2, ax2 = plt.subplots(figsize=(8, 5))
-    sns.barplot(x=weather_avg.index, y=weather_avg.values, ax=ax2, palette='Set2', edgecolor='black', , legend=False)
+    sns.barplot(x=weather_avg.index, y=weather_avg.values, ax=ax2, palette='Set2', edgecolor='black', legend=False)
     ax2.set_title('Rata-rata Penyewaan per Kondisi Cuaca')
     ax2.set_ylabel('Rata-rata Jumlah Penyewaan')
     
