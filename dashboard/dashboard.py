@@ -290,6 +290,87 @@ Insight:
 - Pola tren bulanan memperlihatkan puncak permintaan yang selalu terpusat di bulan September-Oktober (awal musim gugur).
 """)
 
+# -----------------------------------------------------------------------------
+# PERTANYAAN 2 (DIPERBAIKI UNTUK MODE HOURLY)
+# -----------------------------------------------------------------------------
+st.markdown("## 🌤️ Analisis Kondisi Cuaca dan Musim")
+
+# 1. Agregasi ke level harian jika mode Hourly
+if analysis_level == "Hourly":
+    df_viz = filtered_df.groupby("dteday").agg({
+        "cnt": "sum",
+        "casual": "sum",
+        "registered": "sum",
+        "temp": "mean",
+        "hum": "mean",
+        "windspeed": "mean",
+        "season_name": "first",
+        "weather_condition": "first",
+        "workingday": "first",
+        "year": "first",
+        "month": "first"
+    }).reset_index()
+    st.caption("ℹ️ Data ditampilkan dalam agregat harian agar sebanding dengan analisis di notebook.")
+else:
+    df_viz = filtered_df.copy()
+
+# 2. Barplot Rata-rata per Musim & Cuaca
+season_avg = df_viz.groupby('season_name')['cnt'].mean().reindex(['Spring', 'Summer', 'Fall', 'Winter'])
+weather_avg = df_viz.groupby('weather_condition')['cnt'].mean().reindex(['Cerah', 'Berawan', 'Hujan Ringan'])
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig1, ax1 = plt.subplots(figsize=(8, 5))
+    sns.barplot(x=season_avg.index, y=season_avg.values, ax=ax1,
+                hue=season_avg.index, palette='Set3', edgecolor='black', legend=False)
+    ax1.set_title('Rata-rata Penyewaan per Musim')
+    ax1.set_ylabel('Rata-rata Jumlah Penyewaan (per hari)')
+    for i, v in enumerate(season_avg.values):
+        if pd.notna(v):
+            ax1.text(i, v + 100, f'{v:.0f}', ha='center', fontweight='bold')
+    st.pyplot(fig1)
+
+with col2:
+    fig2, ax2 = plt.subplots(figsize=(8, 5))
+    sns.barplot(x=weather_avg.index, y=weather_avg.values, ax=ax2,
+                hue=weather_avg.index, palette='Set2', edgecolor='black', legend=False)
+    ax2.set_title('Rata-rata Penyewaan per Kondisi Cuaca')
+    ax2.set_ylabel('Rata-rata Jumlah Penyewaan (per hari)')
+    for i, v in enumerate(weather_avg.values):
+        if pd.notna(v):
+            ax2.text(i, v + 100, f'{v:.0f}', ha='center', fontweight='bold')
+    st.pyplot(fig2)
+
+# 3. Boxplot Interaksi Musim dan Cuaca
+st.markdown("### 📦 Distribusi Penyewaan: Interaksi Musim dan Cuaca")
+fig3, ax3 = plt.subplots(figsize=(14, 6))
+sns.boxplot(data=df_viz, x='season_name', y='cnt', hue='weather_condition',
+            order=['Spring', 'Summer', 'Fall', 'Winter'],
+            hue_order=['Cerah', 'Berawan', 'Hujan Ringan'],
+            palette='viridis', width=0.7, ax=ax3)
+ax3.set_title('Interaksi Musim dan Kondisi Cuaca (2011-2012)')
+ax3.set_ylabel('Jumlah Penyewaan (cnt) per hari')
+ax3.legend(title='Kondisi Cuaca', bbox_to_anchor=(1.02, 1), loc='upper left')
+st.pyplot(fig3)
+
+# 4. Lineplot Tren Bulanan per Musim
+st.markdown("### 📈 Tren Rata-rata Penyewaan Bulanan per Musim")
+if "year" in df_viz.columns and "month" in df_viz.columns:
+    monthly_season = df_viz.groupby(['year', 'month', 'season_name'])['cnt'].mean().reset_index()
+    monthly_season['date'] = pd.to_datetime(monthly_season[['year', 'month']].assign(day=1))
+
+    if not monthly_season.empty:
+        fig4, ax4 = plt.subplots(figsize=(14, 5))
+        sns.lineplot(data=monthly_season, x='date', y='cnt', hue='season_name',
+                     palette='Set1', marker='o', linewidth=2.5, markersize=8, ax=ax4)
+        ax4.set_title('Tren Rata-rata Penyewaan Bulanan per Musim')
+        ax4.set_ylabel('Rata-rata Penyewaan Harian')
+        ax4.legend(title='Musim', bbox_to_anchor=(1.02, 1), loc='upper left')
+        plt.xticks(rotation=45)
+        st.pyplot(fig4)
+    else:
+        st.warning("Data bulanan tidak tersedia untuk filter yang dipilih.")
 
 # ANALISIS LANJUTAN
 st.markdown("## 🔍 Analisis Lanjutan")
