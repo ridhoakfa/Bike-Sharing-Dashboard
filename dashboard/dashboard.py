@@ -227,18 +227,28 @@ with col4:
     g3.fig.suptitle("Kecepatan Angin vs Penyewaan", y=1.02)
     st.pyplot(g3.figure)
 
-st.info("""
+corr_values = agg_df[["temp", "hum", "windspeed"]].corrwith(agg_df["cnt"])
+
+top_factor = corr_values.abs().idxmax()
+top_value = corr_values[top_factor]
+
+st.success(f"""
 Insight:
 
-- **Suhu (temp)** menunjukkan hubungan positif yang paling kuat dengan jumlah penyewaan,
-  yang berarti semakin hangat kondisi cuaca, semakin tinggi minat pengguna.
-- **Kelembapan (hum)** memiliki hubungan negatif yang lemah, sehingga bukan faktor utama
-  dalam menentukan keputusan pengguna.
-- **Kecepatan angin (windspeed)** menunjukkan pengaruh negatif, di mana kondisi berangin
-  cenderung menurunkan kenyamanan dan jumlah penyewaan.
-- Secara keseluruhan, faktor lingkungan berpengaruh, namun **suhu adalah driver utama**.
+- Berdasarkan hasil korelasi, variabel yang memiliki hubungan paling kuat dengan jumlah penyewaan adalah **{top_factor} ({top_value:.2f})**.
+
+- Variabel suhu (temp) menunjukkan hubungan **{'positif' if corr_values['temp'] > 0 else 'negatif'} ({corr_values['temp']:.2f})**, 
+  yang mengindikasikan bahwa perubahan suhu {'meningkatkan' if corr_values['temp'] > 0 else 'menurunkan'} jumlah penyewaan.
+
+- Kelembapan (hum) memiliki hubungan **{'positif' if corr_values['hum'] > 0 else 'negatif'} ({corr_values['hum']:.2f})**, 
+  namun pengaruhnya relatif {'lemah' if abs(corr_values['hum']) < 0.3 else 'cukup terlihat'}.
+
+- Kecepatan angin (windspeed) menunjukkan hubungan **{'positif' if corr_values['windspeed'] > 0 else 'negatif'} ({corr_values['windspeed']:.2f})**, 
+  yang mencerminkan bahwa kondisi angin dapat memengaruhi kenyamanan pengguna.
+
+- Secara keseluruhan, faktor lingkungan memang berpengaruh terhadap jumlah penyewaan, 
+  namun kekuatan pengaruhnya bergantung pada kondisi data yang dipilih melalui filter.
 """)
-st.markdown("---")
 
 # PERTANYAAN 2
 st.markdown("## 🌤️ Analisis Kondisi Cuaca dan Musim")
