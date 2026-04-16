@@ -250,6 +250,7 @@ Insight:
   namun kekuatan pengaruhnya bergantung pada kondisi data yang dipilih melalui filter.
 """)
 
+st.markdown("---")
 # PERTANYAAN 2
 st.markdown("## 🌤️ Analisis Kondisi Cuaca dan Musim")
 
@@ -369,6 +370,7 @@ Insight:
   yang mencerminkan pola musiman dalam penggunaan layanan bike sharing.
 """)
 
+st.markdown("---")
 # ANALISIS LANJUTAN
 st.markdown("## 🔍 Analisis Lanjutan")
 st.markdown("---")   
