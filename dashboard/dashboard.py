@@ -159,7 +159,7 @@ st.markdown("---")
 
 st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 
-col1, col2, col3, col4 = st.columns(8)
+col1, col2 = st.columns(2)
 
 with col1:
 # AGREGASI
@@ -186,6 +186,8 @@ with col2:
                        marginal_kws={'bins':25, 'fill':True, 'color':'steelblue'})
     g1.fig.suptitle("Suhu vs Penyewaan", y=1.02)
     st.pyplot(g1.figure)
+
+col3, col4 = st.columns(2)
 
 with col3:
     g2 = sns.jointplot(data=agg_df, x='hum', y='cnt', kind='reg',
