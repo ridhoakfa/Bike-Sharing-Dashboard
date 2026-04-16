@@ -347,7 +347,11 @@ top_season_val = season_avg.max()
 top_weather = weather_avg.idxmax()
 top_weather_val = weather_avg.max()
 
-interaction = box_df.groupby(["season_name", "weather_condition"])["cnt"].median().idxmax()
+if not box_df.empty:
+    interaction = box_df.groupby(["season_name", "weather_condition"])["cnt"].median().idxmax()
+    interaction_text = f"**{interaction[0]} + {interaction[1]}**"
+else:
+    interaction_text = "data tidak cukup"
 
 st.success(f"""
 Insight:
@@ -361,7 +365,7 @@ Insight:
 - Distribusi pada boxplot menunjukkan adanya variasi jumlah penyewaan di setiap kombinasi musim dan cuaca,
   yang menandakan bahwa **interaksi antara kedua faktor ini memengaruhi permintaan secara bersamaan**.
 
-- Kombinasi dengan median penyewaan tertinggi terjadi pada **{interaction[0]} + {interaction[1]}**.  
+- Kombinasi dengan median penyewaan tertinggi terjadi pada **{interaction_text}**.  
 
 - Pada kondisi cuaca yang kurang mendukung (seperti hujan), jumlah penyewaan cenderung lebih rendah
   dibandingkan kondisi cuaca yang lebih baik.
