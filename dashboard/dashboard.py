@@ -161,8 +161,6 @@ dominant_ratio = max(casual_ratio, registered_ratio)
 usage_type = "kebutuhan rutin (commuting)" if registered_ratio > 0.6 else "rekreasional"
 
 st.success(f"""
-Insight Utama:
-
 - Pada periode yang dipilih, total jumlah penyewaan tercatat sebesar **{total:,.0f}**, 
   dengan dominasi pengguna **{dominant_user} ({dominant_ratio:.1%})**.
 
