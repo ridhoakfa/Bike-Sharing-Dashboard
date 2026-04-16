@@ -110,6 +110,11 @@ filtered_df = filtered_df[
 
 st.sidebar.caption(f"Rentang data: {min_date} sampai {max_date}")
 
+# Cek apakah data tersedia setelah filtering
+if filtered_df.empty:
+    st.warning("⚠️ Tidak ada data yang sesuai dengan filter yang dipilih. Silakan sesuaikan filter.")
+    st.stop()
+
 # HEADER
 st.title(f"🚲 Bike Sharing Dashboard ({analysis_level} Analysis)")
 st.markdown("""
@@ -186,6 +191,8 @@ with col2:
                        marginal_kws={'bins':25, 'fill':True, 'color':'steelblue'})
     g1.fig.suptitle("Suhu vs Penyewaan", y=1.02)
     st.pyplot(g1.figure)
+    if analysis_level == "Hourly":
+        st.caption("ℹ️ Data diagregasi ke level harian untuk analisis korelasi.")
 
 col3, col4 = st.columns(2)
 
