@@ -134,6 +134,7 @@ st.info("""
 
 # OVERVIEW
 st.markdown("## 📊 Overview")
+st.caption(f"📅 Data ditampilkan: **{start_date.strftime('%d %b %Y')}** – **{end_date.strftime('%d %b %Y')}**")
 
 col1, col2, col3 = st.columns(3)
 
