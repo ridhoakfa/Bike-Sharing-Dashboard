@@ -313,7 +313,7 @@ sns.boxplot(data=box_df, x='season_name', y='cnt', hue='weather_condition',
             hue_order=cuaca_tersedia,
             palette='viridis', width=0.7, ax=ax3)
 
-ax3.set_title('Distribusi Penyewaan Sepeda: Interaksi Musim dan Kondisi Cuaca (2011-2012)')
+ax3.set_title(f'Distribusi Penyewaan: Interaksi Musim & Cuaca ({start_date} - {end_date})')
 ax3.set_ylabel('Jumlah Penyewaan (cnt)')
 ax3.legend(title='Kondisi Cuaca', bbox_to_anchor=(1.02, 1), loc='upper left')
 st.pyplot(fig3)
