@@ -159,9 +159,9 @@ st.markdown("---")
 
 st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 
-col1 = st.columns(2)
+col1, col2, col3, col4 = st.columns(4)
 
-col1:
+with col1:
 # AGREGASI
     agg_df = filtered_df.copy()
 
@@ -178,8 +178,6 @@ col1:
     sns.heatmap(corr, annot=True, fmt=".2f", ax=ax)
     ax.set_title("Korelasi Variabel")
     st.pyplot(fig)
-
-col2, col3, col4 = st.columns(3)
 
 with col2:
     g1 = sns.jointplot(data=agg_df, x='temp', y='cnt', kind='reg', 
