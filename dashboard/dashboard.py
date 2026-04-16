@@ -423,31 +423,31 @@ if analysis_level == "Hourly":
 
     st.pyplot(fig)
 
-# Ambil dominasi per kondisi
-wd_peak = wd.sum(axis=1).idxmax()
-nwd_peak = nwd.sum(axis=1).idxmax()
+    # Ambil dominasi per kondisi
+    wd_peak = wd.sum(axis=1).idxmax()
+    nwd_peak = nwd.sum(axis=1).idxmax()
 
-wd_dominant = "registered" if wd["registered"].sum() > wd["casual"].sum() else "casual"
-nwd_dominant = "registered" if nwd["registered"].sum() > nwd["casual"].sum() else "casual"
+    wd_dominant = "registered" if wd["registered"].sum() > wd["casual"].sum() else "casual"
+    nwd_dominant = "registered" if nwd["registered"].sum() > nwd["casual"].sum() else "casual"
 
-st.info(f"""
-Insight:
+    st.info(f"""
+    Insight:
 
-- Pada **Working Day**, periode dengan aktivitas tertinggi terjadi pada **{wd_peak}**, 
-  dengan dominasi pengguna **{wd_dominant}**, yang mencerminkan pola penggunaan untuk aktivitas rutin.
+    - Pada **Working Day**, periode dengan aktivitas tertinggi terjadi pada **{wd_peak}**, 
+      dengan dominasi pengguna **{wd_dominant}**, yang mencerminkan pola penggunaan untuk aktivitas rutin.
 
-- Pada **Non-Working Day**, aktivitas tertinggi terjadi pada **{nwd_peak}**, 
-  dengan kecenderungan dominasi pengguna **{nwd_dominant}**, yang menunjukkan pola penggunaan yang lebih fleksibel.
+    - Pada **Non-Working Day**, aktivitas tertinggi terjadi pada **{nwd_peak}**, 
+      dengan kecenderungan dominasi pengguna **{nwd_dominant}**, yang menunjukkan pola penggunaan yang lebih fleksibel.
 
-- Perbandingan ini menunjukkan adanya **perbedaan pola penggunaan berdasarkan jenis hari**, 
-  di mana waktu penggunaan dan tipe pengguna dapat berubah mengikuti konteks aktivitas.
+    - Perbandingan ini menunjukkan adanya **perbedaan pola penggunaan berdasarkan jenis hari**, 
+      di mana waktu penggunaan dan tipe pengguna dapat berubah mengikuti konteks aktivitas.
 
-- Secara umum, aktivitas penyewaan cenderung lebih rendah pada periode **Off Time**, 
-  yang mengindikasikan adanya pengaruh faktor waktu terhadap intensitas penggunaan.
+    - Secara umum, aktivitas penyewaan cenderung lebih rendah pada periode **Off Time**, 
+      yang mengindikasikan adanya pengaruh faktor waktu terhadap intensitas penggunaan.
 
-- Temuan ini menegaskan bahwa **waktu dan jenis hari merupakan faktor penting**
-  dalam memahami segmentasi pengguna dan dinamika permintaan bike sharing.
-""")
+    - Temuan ini menegaskan bahwa **waktu dan jenis hari merupakan faktor penting**
+      dalam memahami segmentasi pengguna dan dinamika permintaan bike sharing.
+    """)
 else:
     st.info("""
     Analisis waktu tidak tersedia pada level data harian (daily), karena tidak terdapat variabel jam (hour).
