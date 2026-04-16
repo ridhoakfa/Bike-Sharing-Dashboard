@@ -161,7 +161,7 @@ st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 
 col1 = st.columns(2)
 
-with col1:
+col1:
 # AGREGASI
     agg_df = filtered_df.copy()
 
