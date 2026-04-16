@@ -183,6 +183,8 @@ with col1:
     sns.heatmap(corr, annot=True, fmt=".2f", ax=ax)
     ax.set_title("Korelasi Variabel")
     st.pyplot(fig)
+    if analysis_level == "Hourly":
+        st.caption("ℹ️ Data diagregasi ke level harian untuk analisis korelasi.")
 
 with col2:
     g1 = sns.jointplot(data=agg_df, x='temp', y='cnt', kind='reg', 
@@ -191,8 +193,6 @@ with col2:
                        marginal_kws={'bins':25, 'fill':True, 'color':'steelblue'})
     g1.fig.suptitle("Suhu vs Penyewaan", y=1.02)
     st.pyplot(g1.figure)
-    if analysis_level == "Hourly":
-        st.caption("ℹ️ Data diagregasi ke level harian untuk analisis korelasi.")
 
 col3, col4 = st.columns(2)
 
