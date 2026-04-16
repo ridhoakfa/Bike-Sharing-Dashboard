@@ -147,19 +147,33 @@ st.markdown("---")
 st.markdown("### 🔍 Insight Utama")
 
 total = filtered_df["cnt"].sum()
-casual_ratio = filtered_df["casual"].sum() / total
-registered_ratio = filtered_df["registered"].sum() / total
+
+if total > 0:
+    casual_ratio = filtered_df["casual"].sum() / total
+    registered_ratio = filtered_df["registered"].sum() / total
+else:
+    casual_ratio = 0
+    registered_ratio = 0
+
+dominant_user = "registered" if registered_ratio > casual_ratio else "casual"
+dominant_ratio = max(casual_ratio, registered_ratio)
+
+usage_type = "kebutuhan rutin (commuting)" if registered_ratio > 0.6 else "rekreasional"
 
 st.success(f"""
 Insight Utama:
 
-- Total penyewaan mencapai **{total:,.0f}**, dengan dominasi pengguna **registered ({registered_ratio:.1%})**,
-  menunjukkan bahwa layanan ini lebih banyak digunakan untuk **kebutuhan rutin (commuting)** dibanding rekreasi.
-- Pola ini konsisten di seluruh filter, di mana pengguna registered tetap menjadi kontributor utama.
-- Selain itu, faktor lingkungan seperti **suhu dan kondisi cuaca** terbukti memiliki pengaruh signifikan
-  terhadap fluktuasi jumlah penyewaan.
-- Dengan demikian, sistem bike sharing ini dapat dikategorikan sebagai layanan yang **utility-driven**,
-  bukan sekadar leisure.
+- Pada periode yang dipilih, total jumlah penyewaan tercatat sebesar **{total:,.0f}**, 
+  dengan dominasi pengguna **{dominant_user} ({dominant_ratio:.1%})**.
+
+- Komposisi ini menunjukkan bahwa pola penggunaan sepeda cenderung bersifat **{usage_type}**, 
+  yang mencerminkan adanya segmentasi antara pengguna rutin dan pengguna kasual.
+
+- Perbedaan proporsi ini menjadi indikasi bahwa perilaku pengguna berpotensi dipengaruhi oleh 
+  **kondisi eksternal seperti waktu, cuaca, dan musim**, yang akan dianalisis lebih lanjut pada bagian berikutnya.
+
+- Oleh karena itu, memahami faktor lingkungan serta pola waktu penggunaan menjadi kunci 
+  untuk menjawab bagaimana permintaan bike sharing dapat berubah dalam berbagai kondisi.
 """)
 
 st.markdown("---")
