@@ -54,6 +54,13 @@ weather = st.sidebar.multiselect(
     default=df["weather_condition"].unique()
 )
 
+season_options = df['season_name'].unique().tolist()
+season = st.sidebar.multiselect(
+    "Musim:",
+    options=season_options,
+    default=season_options
+)
+
 # FILTERING
 filtered_df = df.copy()
 
@@ -63,6 +70,8 @@ elif workingday == "Non-Working Day":
     filtered_df = filtered_df[filtered_df["workingday"] == 0]
 
 filtered_df = filtered_df[filtered_df["weather_condition"].isin(weather)]
+
+filtered_df = filtered_df[filtered_df["season_name"].isin(season)]
 
 # Pastikan datetime
 filtered_df["dteday"] = pd.to_datetime(filtered_df["dteday"])
