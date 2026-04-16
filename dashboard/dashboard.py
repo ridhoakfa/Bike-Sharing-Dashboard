@@ -278,6 +278,11 @@ with col2:
 st.markdown("### 📦 Distribusi Penyewaan: Interaksi Musim dan Cuaca")
 fig3, ax3 = plt.subplots(figsize=(14, 6))
 
+if analysis_level == "Hourly":
+    box_df = filtered_df.groupby(["dteday", "season_name", "weather_condition"])["cnt"].sum().reset_index()
+else:
+    box_df = filtered_df.copy()
+
 sns.boxplot(data=box_df, x='season_name', y='cnt', hue='weather_condition',
             order=musim_tersedia,
             hue_order=cuaca_tersedia,
@@ -288,12 +293,8 @@ ax3.set_ylabel('Jumlah Penyewaan (cnt)')
 ax3.legend(title='Kondisi Cuaca', bbox_to_anchor=(1.02, 1), loc='upper left')
 st.pyplot(fig3)
 
-# Perbaikan Boxplot: Agregasi ke level harian khusus untuk mode Hourly
 if analysis_level == "Hourly":
-    box_df = filtered_df.groupby(["dteday", "season_name", "weather_condition"])["cnt"].sum().reset_index()
     st.caption("ℹ️ Pada mode Hourly, data diagregasi menjadi total harian agar boxplot representatif dan tidak terlihat 'gepeng' karena jam malam yang sepi.")
-else:
-    box_df = filtered_df.copy()
 
 # 3. Lineplot Tren Bulanan per Musim
 st.markdown("### 📈 Tren Rata-rata Penyewaan Bulanan per Musim")
