@@ -159,7 +159,7 @@ st.markdown("---")
 
 st.markdown("## 🌡️ Pengaruh Faktor Lingkungan terhadap Penyewaan")
 
-col1 = st.columns(1)
+col1 = st.columns(2)
 
 with col1:
 # AGREGASI
