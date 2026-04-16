@@ -124,6 +124,8 @@ Dashboard ini menyajikan analisis lengkap untuk menjawab:
 3. Pola perilaku pengguna berdasarkan waktu
 """)
 
+st.caption("📅 **Periode Data:** 1 Januari 2011 – 31 Desember 2012")
+
 st.info("""
 **Dibuat oleh:** Ridho Akbar Fadhilah  
 **Dataset:** Bike Sharing Dataset
